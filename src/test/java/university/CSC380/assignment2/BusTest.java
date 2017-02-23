@@ -8,6 +8,9 @@ package university.CSC380.assignment2;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+import java.time.LocalTime;
 
 /**
  *
@@ -25,8 +28,19 @@ public class BusTest extends TestCase{
     }
     
     @test
-    public void testGPSFeed(){
-        assertTrue( true );
+    public void testGPSFeedPollsEveryMinute(){
+        
+        HashMap<String, Bus> firstResults = busses;
+        
+        TimeUnit.MINUTES.sleep(1);
+        
+        for (Bus b : busses.values()){
+            if (b.timeOfLastPolling == firstResults.get(b.id)){
+                assertTrue(false);
+            }
+        }
+        
+        assertTrue(true);
     }
     
 }
