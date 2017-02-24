@@ -12,12 +12,16 @@ import java.util.HashMap;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
  * @author bill
  */
 public final class Utility {
+    
+    private static Timer apiPoller;
     
     private Utility(){}
     
@@ -98,5 +102,11 @@ public final class Utility {
         httpConn.disconnect();
         
         return fileName;
+    }
+    
+    public static void startupTasks(){
+        apiPoller = new Timer();
+        TimerTask update = new UpdateModel();
+        apiPoller.schedule(update, 0, 60000);
     }
 }

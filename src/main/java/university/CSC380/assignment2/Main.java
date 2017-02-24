@@ -21,6 +21,9 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, 
             IOException{
+        
+        Utility.startupTasks();
+        
         HashMap hm = Utility.parseSchedule("Routes.txt");
         
         

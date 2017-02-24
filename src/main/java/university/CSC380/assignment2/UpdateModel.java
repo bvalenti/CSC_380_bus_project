@@ -1,0 +1,20 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package university.CSC380.assignment2;
+
+import java.util.TimerTask;
+
+/**
+ *
+ * @author bill
+ */
+public class UpdateModel extends TimerTask{
+    
+    public void run(){
+        System.out.println("Executing TimerTask UpdateModel");
+    }
+    
+}
