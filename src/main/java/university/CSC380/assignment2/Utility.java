@@ -14,6 +14,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 /**
  *
@@ -77,17 +80,13 @@ public final class Utility {
     }
     
     // downloads File and returns File Name
-    public static String getFile(String url, String saveLocation) 
-            throws MalformedURLException, IOException{
+    public static String getFile(String url, String saveLocation, 
+            String fileName) throws MalformedURLException, IOException{
         URL urlToGet = new URL(url);
         HttpURLConnection httpConn = (HttpURLConnection) 
                 urlToGet.openConnection();
         int responseCode = httpConn.getResponseCode();
-        String fileName = "";
         if (responseCode == HttpURLConnection.HTTP_OK){
-            // next line will break if MTA Bus API url with key not used
-            fileName = url.substring(url.lastIndexOf("/") + 1,
-                        url.lastIndexOf("?"));
             InputStream inputStream = httpConn.getInputStream();
             String saveFilePath = saveLocation + File.separator + fileName;
             FileOutputStream outputStream = new FileOutputStream(saveFilePath);
@@ -108,5 +107,26 @@ public final class Utility {
         apiPoller = new Timer();
         TimerTask update = new UpdateModel();
         apiPoller.schedule(update, 0, 60000);
+    }
+    
+    public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException{
+        for (Bus b[] : busses.values()){
+            for (Stop s : b[0].busRoute){
+                String address = s.stopName.split("/")[0] + ", " + 
+                        s.stopName.split("/")[1];
+                String fileName1 = Utility.getFile("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=" + address, "/home/bill/Documents", "address-data.json");
+                // parse to json object and update busses
+            }
+            // repeat for opposite direction
+        }
+        
+        return busses;
+    }
+    
+    public static JsonObject parseJson(String fn) throws FileNotFoundException{
+        File f = new File(fn);
+        FileReader fr = new FileReader(f);
+        JsonReader reader = Json.createReader(fr);
+        return reader.readObject();
     }
 }
