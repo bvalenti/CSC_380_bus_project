@@ -44,11 +44,6 @@ public class Bus {
 					LatLng latLngBusRoute2 = new LatLng(busRoute[i + 1].latitude, busRoute[i + 1].longitude);
 					LatLng latLngBusRoute1 = new LatLng(busRoute[i].latitude, busRoute[i].longitude);
 					distancesBetweenStops[i] = latLngBusRoute2.distance(latLngBusRoute1);
-//					OSRef osref2 = latLngBusRoute2.toOSRef();
-//					OSRef osref1 = latLngBusRoute1.toOSRef();
-//					distancesBetweenStops[i] 
-//							= Math.sqrt(Math.pow(osref2.getEasting() - osref1.getEasting(),2) 
-//							+ Math.pow(osref2.getNorthing() - osref1.getNorthing(),2));
 				}
 				
 				//Find the index of the next bus stop in the array busRoute. 
@@ -63,25 +58,12 @@ public class Bus {
 				LatLng latLngNextStop = new LatLng(busRoute[nextStopIndex].latitude, busRoute[nextStopIndex].longitude);
 				LatLng latLngBus = new LatLng(latitude, longitude);
 				LatLng latLngBusLastPolling = new LatLng(latitudeOfLastPolling, longitudeOfLastPolling);
-				
-//				OSRef osrefNextStop = latLngNextStop.toOSRef();
-//				OSRef osrefBus = latLngBus.toOSRef();
-//				OSRef osrefBusLastPolling = latLngBusLastPolling.toOSRef();
 
 				double distanceFromBusToFirstStop = latLngBus.distance(latLngNextStop);
 				
-//				double distanceFromBusToFirstStop = Math.sqrt(Math.pow(osrefNextStop.getEasting() - osrefBus.getEasting(),2) 
-//						+ Math.pow(osrefNextStop.getNorthing() - osrefBus.getNorthing(),2));
-				
-				//System.out.println(osrefNextStop.getNorthing());
-				//System.out.println(distanceFromBusToFirstStop);
-				
 				//The bus speed in meters/minute.
 				double averageBusVelocity = latLngBus.distance(latLngBusLastPolling);
-				
-//				double averageBusVelocity = Math.sqrt(Math.pow(osrefBus.getEasting() - osrefBusLastPolling.getEasting(),2) 
-//						+ Math.pow(osrefBus.getNorthing() - osrefBusLastPolling.getNorthing(),2));
-				
+								
 				//Sum distances along the bus route from the bus to stop, s. 
 				double totalDistanceToStop = distanceFromBusToFirstStop;
 				for (int i = nextStopIndex; i <= stopIndex; i++) {
