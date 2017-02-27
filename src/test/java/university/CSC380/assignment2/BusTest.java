@@ -1,19 +1,16 @@
 package university.CSC380.assignment2;
 import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.HashMap;
-
 import org.junit.Test;
 
 
 
 public class BusTest {
 	
-	// @author bvalenti
 	@Test
-	public void testBusArrivalPrediction() throws IOException {
+	public void getExpectedArrivalTimeTest() {
 		Bus testBus = new Bus();
 		Stop testStop = new Stop();
 		
@@ -47,10 +44,29 @@ public class BusTest {
 		assertEquals(expectedTime, testTime);
 	}
 	
+	@Test 
+	public void getExpectedArrivalTimeWrongStopInputTest () throws IllegalArgumentException {
+		Bus testBus = new Bus();
+		Stop testStop = new Stop();
+		
+		testBus.destinationName = "TheFirstStop";
+		testBus.busRoute = new Stop[3];
+		testBus.busRoute[0] = new Stop();
+		testBus.busRoute[1] = new Stop();
+		testBus.busRoute[2] = new Stop();
+		testBus.busRoute[0].stopName = "TheFirstStop";
+		testBus.busRoute[1].stopName = "TheSecondStop";
+		testBus.busRoute[2].stopName = "TheThirdStop";
+		
+		testStop.stopName = "NotInBusRoute";
+		
+		LocalTime testTime = testBus.getExpectedArrivalTime(testStop);
+		assertNull(testTime);
+	}
 	
 	 // @author dt817
 	    @Test
-	    public void VehicleLocationTest(){
+	    public void VehicleLocationTest() {
 	        Bus testBus=new Bus();
 	        Bus testBus2=new Bus();
 	        HashMap<String, Bus> busses= new HashMap();
@@ -63,7 +79,8 @@ public class BusTest {
 	        busses.put("M2-56", testBus2);
 			
 	                
-	         VehicleLocation testLocation= new VehicleLocation(busses);
-	         testLocation.getVehicleLocation();
+	        VehicleLocation testLocation= new VehicleLocation(busses);
+	        testLocation.getVehicleLocation();
 	    }
+	    
 	}
