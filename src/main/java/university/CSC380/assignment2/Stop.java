@@ -18,6 +18,8 @@ public class Stop {
         stopName = sn;
     }
     
+    public Stop(){}
+    
     public void exampleMethod(){
         
     }
