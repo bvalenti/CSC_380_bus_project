@@ -27,22 +27,17 @@ import java.time.LocalTime;
 public class UtilityTest extends TestCase {
     
     
-    public void testGPSFeedPollsEveryMinute() throws InterruptedException, IOException{
+    public void testStartupTasks() throws InterruptedException, IOException{
         
         Utility.startupTasks();
         
-        Thread.sleep(30000);
-        
-        Path p = Paths.get("vehicle-monitoring.json");
-        BasicFileAttributes view = Files.getFileAttributeView(p, 
-                BasicFileAttributeView.class).readAttributes();
-        FileTime start = view.lastModifiedTime();
+        int first = Utility.updateModelExecuteCount;
         
         Thread.sleep(60000);
         
-        FileTime end = view.lastModifiedTime();
+        int last = Utility.updateModelExecuteCount;
         
-        assertTrue(!start.equals(end));
+        assertTrue(first != last);
     }
     
 }

@@ -18,6 +18,7 @@ public class UpdateModel extends TimerTask{
     
     public void run(){
         System.out.println("Executing TimerTask UpdateModel");
+        Utility.updateModelExecuteCount++;
         try {
             Utility.getFile("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
         } catch (IOException ex) {

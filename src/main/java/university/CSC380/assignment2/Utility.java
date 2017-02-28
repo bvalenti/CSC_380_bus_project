@@ -25,6 +25,7 @@ import javax.json.JsonReader;
 public final class Utility {
     
     private static Timer apiPoller;
+    public static int updateModelExecuteCount;
     
     private Utility(){}
     
