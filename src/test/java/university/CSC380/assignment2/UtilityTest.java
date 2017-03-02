@@ -71,7 +71,7 @@ public class UtilityTest extends TestCase {
     public void testStartupTasks() throws InterruptedException, IOException{
         Utility.startupTasks();
         int first = Utility.updateModelExecuteCount;
-        Thread.sleep(60000);
+        Thread.sleep(72000);
         int last = Utility.updateModelExecuteCount;
         assertTrue(first != last);
     }

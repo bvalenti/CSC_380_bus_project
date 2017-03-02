@@ -117,7 +117,7 @@ public final class Utility {
     public static void startupTasks(){
         apiPoller = new Timer();
         TimerTask update = new UpdateModel();
-        apiPoller.schedule(update, 0, 60000);
+        apiPoller.schedule(update, 0, 70000);
     }
     
     public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException{
