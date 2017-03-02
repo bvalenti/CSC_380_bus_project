@@ -80,12 +80,22 @@ public final class Utility {
         return busses;
     }
     
+    // opens connection to MTA api
+    public static HttpURLConnection openMTAApiConnection() throws MalformedURLException, IOException{
+        URL urlToGet = new URL("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
+        return (HttpURLConnection) urlToGet.openConnection();
+    }
+    
+    // opens connection to Google Geocoding api
+    public static HttpURLConnection openGoogleApiConnection(String address) 
+            throws MalformedURLException, IOException{
+        URL urlToGet = new URL("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=" + address);
+        return (HttpURLConnection) urlToGet.openConnection();
+    }
+    
     // downloads File and returns File Name
-    public static String getFile(String url, String saveLocation, 
+    public static String getFile(HttpURLConnection httpConn, String saveLocation, 
             String fileName) throws MalformedURLException, IOException{
-        URL urlToGet = new URL(url);
-        HttpURLConnection httpConn = (HttpURLConnection) 
-                urlToGet.openConnection();
         int responseCode = httpConn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK){
             InputStream inputStream = httpConn.getInputStream();
@@ -115,7 +125,8 @@ public final class Utility {
             for (Stop s : b[0].busRoute){
                 String address = s.stopName.split("/")[0] + ", " + 
                         s.stopName.split("/")[1];
-                String fileName1 = Utility.getFile("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=" + address, "/home/bill/Documents", "address-data.json");
+                HttpURLConnection conn = Utility.openGoogleApiConnection(address);
+                String fileName1 = Utility.getFile(conn, "/home/bill/Documents", "address-data.json");
                 // parse to json object and update busses
             }
             // repeat for opposite direction

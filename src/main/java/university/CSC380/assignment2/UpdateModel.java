@@ -6,6 +6,7 @@
 package university.CSC380.assignment2;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,8 @@ public class UpdateModel extends TimerTask{
         System.out.println("Executing TimerTask UpdateModel");
         Utility.updateModelExecuteCount++;
         try {
-            Utility.getFile("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
+            HttpURLConnection conn = Utility.openMTAApiConnection();
+            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
         } catch (IOException ex) {
             System.out.println("IO Exception getting Vehicle Data.");
         }

@@ -6,7 +6,10 @@
 package university.CSC380.assignment2;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +22,9 @@ import junit.framework.TestSuite;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.time.LocalTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -26,18 +32,48 @@ import java.time.LocalTime;
  */
 public class UtilityTest extends TestCase {
     
-    
     public void testStartupTasks() throws InterruptedException, IOException{
-        
         Utility.startupTasks();
-        
         int first = Utility.updateModelExecuteCount;
-        
         Thread.sleep(60000);
-        
         int last = Utility.updateModelExecuteCount;
-        
         assertTrue(first != last);
     }
     
+    //test openMTAApiConnection
+    public void testOpenMTAApiConnection(){
+        try {
+            HttpURLConnection conn = Utility.openMTAApiConnection();
+            assertTrue(conn != null);
+        } catch (IOException ex) {
+            assertTrue(false);
+        }
+    }
+    
+    //test openGooleApiConnection
+    public void testOpenGoogleApiConnection(){
+        try {
+            HttpURLConnection conn = 
+                    Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
+            assertTrue(conn != null);
+        } catch (IOException ex) {
+            assertTrue(false);
+        }
+    }
+    
+    //test getFile
+    public void testGetFile(){
+        try {
+            HttpURLConnection conn = mock(HttpURLConnection.class);
+            InputStream inps = mock(InputStream.class);
+            when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+            when(conn.getInputStream()).thenReturn(inps);
+            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "testfile.txt");
+            assertTrue(true);
+        } catch (IOException ex) {
+            assertTrue(false);
+        }
+        
+        
+    }
 }
