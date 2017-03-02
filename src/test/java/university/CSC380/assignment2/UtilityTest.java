@@ -32,14 +32,6 @@ import static org.mockito.Mockito.*;
  */
 public class UtilityTest extends TestCase {
     
-    public void testStartupTasks() throws InterruptedException, IOException{
-        Utility.startupTasks();
-        int first = Utility.updateModelExecuteCount;
-        Thread.sleep(60000);
-        int last = Utility.updateModelExecuteCount;
-        assertTrue(first != last);
-    }
-    
     //test openMTAApiConnection
     public void testOpenMTAApiConnection(){
         try {
@@ -73,7 +65,14 @@ public class UtilityTest extends TestCase {
         } catch (IOException ex) {
             assertTrue(false);
         }
-        
-        
+    }
+    
+    // test startup tasks
+    public void testStartupTasks() throws InterruptedException, IOException{
+        Utility.startupTasks();
+        int first = Utility.updateModelExecuteCount;
+        Thread.sleep(60000);
+        int last = Utility.updateModelExecuteCount;
+        assertTrue(first != last);
     }
 }
