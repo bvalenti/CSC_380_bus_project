@@ -60,6 +60,7 @@ public class UtilityTest extends TestCase {
             InputStream inps = mock(InputStream.class);
             when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
             when(conn.getInputStream()).thenReturn(inps);
+            when(inps.read()).thenReturn(-1);
             Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "testfile.txt");
             assertTrue(true);
         } catch (IOException ex) {
@@ -71,8 +72,10 @@ public class UtilityTest extends TestCase {
     public void testStartupTasks() throws InterruptedException, IOException{
         Utility.startupTasks();
         int first = Utility.updateModelExecuteCount;
+        System.out.println("Assigned count to first");
         Thread.sleep(72000);
         int last = Utility.updateModelExecuteCount;
+        System.out.println("Assigned count to last");
         assertTrue(first != last);
     }
 }
