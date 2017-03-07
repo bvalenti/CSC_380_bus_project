@@ -135,7 +135,7 @@ public final class Utility {
         return busses;
     }
     
-    public static JsonObject parseJson(String fn) throws FileNotFoundException{
+    public static JsonObject createJsonObject(String fn) throws FileNotFoundException{
         File f = new File(fn);
         FileReader fr = new FileReader(f);
         JsonReader reader = Json.createReader(fr);
