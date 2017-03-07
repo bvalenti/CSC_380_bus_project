@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 public class Bus {	   
     public float longitude, lattitude;
     public String id, destinationName, origin;
-    public LocalDateTime expectedArrivalTime, expectedDepartureTime;
+    public String expectedArrivalTime, expectedDepartureTime;
     public int direction;
     Stop busRoute[];
 	
 	
-public Bus(float lo, float la, String i, String DN, LocalDateTime ex, LocalDateTime t, int d){
+public Bus(float lo, float la, String i, String DN, String ex, String t, int d){
     longitude= lo;
     lattitude= la;
     id= i;
