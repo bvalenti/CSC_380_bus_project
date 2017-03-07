@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -27,6 +28,10 @@ public class Main {
             IOException{
         
 //        Utility.startupTasks();
+
+        HttpURLConnection conn = Utility.openMTAApiConnection();
+        System.out.println("Response code = " + conn.getResponseCode());
+        Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
 //        
 //        HashMap hm = Utility.parseSchedule("Routes.txt");
 //        

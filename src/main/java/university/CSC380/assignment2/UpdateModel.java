@@ -7,6 +7,7 @@ package university.CSC380.assignment2;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;

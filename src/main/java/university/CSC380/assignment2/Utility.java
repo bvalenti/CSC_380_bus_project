@@ -6,12 +6,14 @@
 package university.CSC380.assignment2;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.HashMap;
-import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.json.Json;
@@ -82,23 +84,25 @@ public final class Utility {
     
     // opens connection to MTA api
     public static HttpURLConnection openMTAApiConnection() throws MalformedURLException, IOException{
-        URL urlToGet = new URL("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
+        //URL urlToGet = new URL("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
+        URL urlToGet = new URL("http://api.prod.obanyc.com/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
+        
         return (HttpURLConnection) urlToGet.openConnection();
     }
     
     // opens connection to Google Geocoding api
-    public static HttpURLConnection openGoogleApiConnection(String address) 
+    public static HttpsURLConnection openGoogleApiConnection(String address) 
             throws MalformedURLException, IOException{
         URL urlToGet = new URL("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=" + address);
-        return (HttpURLConnection) urlToGet.openConnection();
+        return (HttpsURLConnection) urlToGet.openConnection();
     }
     
     // downloads File and returns File Name
-    public static String getFile(HttpURLConnection httpConn, String saveLocation, 
+    public static String getFile(URLConnection conn, String saveLocation, 
             String fileName) throws MalformedURLException, IOException{
-        int responseCode = httpConn.getResponseCode();
+        int responseCode = ((HttpURLConnection) conn).getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK){
-            InputStream inputStream = httpConn.getInputStream();
+            InputStream inputStream = conn.getInputStream();
             String saveFilePath = saveLocation + File.separator + fileName;
             FileOutputStream outputStream = new FileOutputStream(saveFilePath);
             int bytesRead = -1;
@@ -109,7 +113,7 @@ public final class Utility {
             outputStream.close();
             inputStream.close();
         }
-        httpConn.disconnect();
+        ((HttpURLConnection)conn).disconnect();
         
         return fileName;
     }
@@ -125,7 +129,7 @@ public final class Utility {
             for (Stop s : b[0].busRoute){
                 String address = s.stopName.split("/")[0] + ", " + 
                         s.stopName.split("/")[1];
-                HttpURLConnection conn = Utility.openGoogleApiConnection(address);
+                HttpsURLConnection conn = Utility.openGoogleApiConnection(address);
                 String fileName1 = Utility.getFile(conn, "/home/bill/Documents", "address-data.json");
                 // parse to json object and update busses
             }

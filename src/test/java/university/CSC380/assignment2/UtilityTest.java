@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,7 +46,7 @@ public class UtilityTest extends TestCase {
     //test openGooleApiConnection
     public void testOpenGoogleApiConnection(){
         try {
-            HttpURLConnection conn = 
+            HttpsURLConnection conn = 
                     Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
             assertTrue(conn != null);
         } catch (IOException ex) {
@@ -54,19 +55,19 @@ public class UtilityTest extends TestCase {
     }
     
     //test getFile
-//    public void testGetFile(){
-//        try {
-//            HttpURLConnection conn = mock(HttpURLConnection.class);
-//            InputStream inps = mock(InputStream.class);
-//            when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
-//            when(conn.getInputStream()).thenReturn(inps);
-//            when(inps.read()).thenReturn(-1);
-//            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "testfile.txt");
-//            assertTrue(true);
-//        } catch (IOException ex) {
-//            assertTrue(false);
-//        }
-//    }
+    public void testGetFile(){
+        try {
+            HttpURLConnection conn = mock(HttpURLConnection.class);
+            InputStream inps = mock(InputStream.class);
+            when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+            when(conn.getInputStream()).thenReturn(inps);
+            when(inps.read()).thenReturn(-1);
+            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "testfile.txt");
+            assertTrue(true);
+        } catch (IOException ex) {
+            assertTrue(false);
+        }
+    }
     
     // test startup tasks
     public void testStartupTasks() throws InterruptedException, IOException{
