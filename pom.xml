@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>university.CSC380</groupId>
-	<artifactId>assignment2</artifactId>
+	<artifactId>Bus_project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>assignment2</name>
+	<name>Bus_project</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -22,6 +22,15 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-
+	 <dependency>
+	  <groupId>javax.json</groupId>
+	  <artifactId>javax.json-api</artifactId>
+	  <version>1.1.0-M1</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.json</groupId>
+	  <artifactId>json</artifactId>
+	  <version>20160810</version>
+	 </dependency>
 	</dependencies>
 </project>
