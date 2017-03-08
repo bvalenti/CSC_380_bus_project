@@ -146,8 +146,10 @@ public final class Utility {
             for (Stop s : b[0].busRoute){
                 String address = s.stopName.split("/")[0] + ", " + 
                         s.stopName.split("/")[1];
-                HttpsURLConnection conn = Utility.openGoogleApiConnection(address);
-                String fileName1 = Utility.getFile(conn, "/home/bill/Documents", "address-data.json", true);
+                HttpsURLConnection conn = 
+                        Utility.openGoogleApiConnection(address);
+                String fileName1 = Utility.getFile(conn, 
+                        "/home/bill/Documents", "address-data.json", true);
                 // parse to json object and update busses
             }
             // repeat for opposite direction
