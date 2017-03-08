@@ -7,8 +7,6 @@ package university.CSC380.assignment2;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.HashMap;
 import javax.net.ssl.HttpsURLConnection;
 import java.net.MalformedURLException;
@@ -20,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.json.*;
-import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
