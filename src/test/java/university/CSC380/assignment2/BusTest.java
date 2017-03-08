@@ -4,7 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.simple.*;
@@ -126,8 +128,8 @@ public class BusTest {
                 // System.out.println(expectedArrivalTime);
                 String expectedDepartureTime = formatter.format(ZonedDateTime.parse(mc.get("ExpectedDepartureTime").toString()));
                 //if(longitude != 0 && latitude != 0 && busID != null && destinationName != null && expectedArrivalTime != null && expectedDepartureTime != null && direction != 0){
-                Bus newBus = new Bus(longitude, latitude, busID, destinationName, expectedArrivalTime, expectedDepartureTime, direction);
-                busses.put(busIDRoute, newBus);
+                Bus newBus = new Bus(longitude, latitude, busIDRoute, destinationName, expectedArrivalTime, expectedDepartureTime, direction);
+                busses.put(busID, newBus);
                // }
 
         }
