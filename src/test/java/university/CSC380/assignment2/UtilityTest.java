@@ -79,10 +79,10 @@ public class UtilityTest extends TestCase {
         System.out.println("Testing getFile");
         try {
             HttpURLConnection conn = mock(HttpURLConnection.class);
-            InputStream inps = mock(InputStream.class);
+            File f = new File("testfile2.txt");
+            FileInputStream finps = new FileInputStream(f);
             when(conn.getResponseCode()).thenReturn(200);
-            when(conn.getInputStream()).thenReturn(inps);
-            when(inps.read()).thenReturn(-1);
+            when(conn.getInputStream()).thenReturn(finps);
             Utility.getFile(conn, 
                     "/home/bill/SchoolWork/csc380/CSC_380_bus_project", 
                     "testfile.txt", false);

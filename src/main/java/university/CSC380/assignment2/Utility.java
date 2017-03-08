@@ -27,6 +27,7 @@ import javax.json.JsonReader;
 public final class Utility {
     
     private static Timer apiPoller;
+    private static TimerTask apiPollerTask;
     public static int updateModelExecuteCount;
     
     private Utility(){}
@@ -99,9 +100,14 @@ public final class Utility {
     
     // downloads File and returns File Name
     public static String getFile(URLConnection conn, String saveLocation, 
-            String fileName) throws MalformedURLException, IOException{
-        int responseCode = ((HttpURLConnection) conn).getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK){
+            String fileName, boolean https) throws MalformedURLException, IOException{
+        int responseCode;
+        if (https){
+            responseCode = ((HttpsURLConnection) conn).getResponseCode();
+        } else {
+            responseCode = ((HttpURLConnection) conn).getResponseCode();
+        }
+        if (responseCode == 200){
             InputStream inputStream = conn.getInputStream();
             String saveFilePath = saveLocation + File.separator + fileName;
             FileOutputStream outputStream = new FileOutputStream(saveFilePath);
@@ -113,15 +119,24 @@ public final class Utility {
             outputStream.close();
             inputStream.close();
         }
-        ((HttpURLConnection)conn).disconnect();
+        if (https){
+            ((HttpsURLConnection)conn).disconnect();
+        } else {
+            ((HttpURLConnection)conn).disconnect();
+        }
         
         return fileName;
     }
     
     public static void startupTasks(){
         apiPoller = new Timer();
-        TimerTask update = new UpdateModel();
-        apiPoller.schedule(update, 0, 70000);
+        apiPollerTask = new UpdateModel();
+        apiPoller.schedule(apiPollerTask, 0, 70000);
+    }
+    
+    public static void stopApiPoller(){
+        apiPollerTask.cancel();
+        apiPoller.cancel();
     }
     
     public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException{
@@ -130,7 +145,7 @@ public final class Utility {
                 String address = s.stopName.split("/")[0] + ", " + 
                         s.stopName.split("/")[1];
                 HttpsURLConnection conn = Utility.openGoogleApiConnection(address);
-                String fileName1 = Utility.getFile(conn, "/home/bill/Documents", "address-data.json");
+                String fileName1 = Utility.getFile(conn, "/home/bill/Documents", "address-data.json", true);
                 // parse to json object and update busses
             }
             // repeat for opposite direction

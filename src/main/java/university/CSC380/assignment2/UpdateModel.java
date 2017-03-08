@@ -23,7 +23,7 @@ public class UpdateModel extends TimerTask{
         Utility.updateModelExecuteCount++;
         try {
             HttpURLConnection conn = Utility.openMTAApiConnection();
-            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
+            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json", false);
         } catch (IOException ex) {
             System.out.println("IO Exception getting Vehicle Data.");
         }
