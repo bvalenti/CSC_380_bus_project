@@ -34,49 +34,81 @@ import static org.mockito.Mockito.*;
 public class UtilityTest extends TestCase {
     
     //test openMTAApiConnection
-    public void testOpenMTAApiConnection(){
+    public void testOpenMTAApiConnection() throws InterruptedException{
+        System.out.println("Testing openMTAApiConnection");
         try {
             HttpURLConnection conn = Utility.openMTAApiConnection();
+            if (conn!= null){
+                System.out.println("Finished testing openMTAApiConnection"
+                        + " - Pass");
+            } else {
+                System.out.println("Finished testing openMTAApiConnection "
+                        + "- Fail");
+            }
             assertTrue(conn != null);
         } catch (IOException ex) {
+            System.out.println("Finished testing openMTAApiConnection "
+                        + "- Fail");
             assertTrue(false);
         }
     }
     
     //test openGooleApiConnection
     public void testOpenGoogleApiConnection(){
+        System.out.println("Testing openGoogleApiConnection");
         try {
             HttpsURLConnection conn = 
                     Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
+            if (conn!= null){
+                System.out.println("Finished testing openGoogleApiConnection"
+                        + " - Pass");
+            } else {
+                System.out.println("Finished testing openGoogleApiConnection "
+                        + "- Fail");
+            }
             assertTrue(conn != null);
         } catch (IOException ex) {
+            System.out.println("Finished testing openGoogleApiConnection - "
+                    + "Fail");
             assertTrue(false);
         }
     }
     
     //test getFile
     public void testGetFile(){
+        System.out.println("Testing getFile");
         try {
             HttpURLConnection conn = mock(HttpURLConnection.class);
             InputStream inps = mock(InputStream.class);
-            when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+            when(conn.getResponseCode()).thenReturn(200);
             when(conn.getInputStream()).thenReturn(inps);
             when(inps.read()).thenReturn(-1);
-            Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "testfile.txt");
+            Utility.getFile(conn, 
+                    "/home/bill/SchoolWork/csc380/CSC_380_bus_project", 
+                    "testfile.txt", false);
+            System.out.println("Finished testing getFile - Pass");
             assertTrue(true);
         } catch (IOException ex) {
+            System.out.println("Finished testing getFile - Fail");
             assertTrue(false);
         }
     }
     
     // test startup tasks
     public void testStartupTasks() throws InterruptedException, IOException{
+        System.out.println("Testing startupTasks");
         Utility.startupTasks();
         int first = Utility.updateModelExecuteCount;
         System.out.println("Assigned count to first");
         Thread.sleep(72000);
         int last = Utility.updateModelExecuteCount;
         System.out.println("Assigned count to last");
+        Utility.stopApiPoller();
+        if (first != last){
+            System.out.println("Finished testing startupTasks - Pass");
+        } else {
+            System.out.println("Finished testing startupTasks - Fail");
+        }
         assertTrue(first != last);
     }
 }
