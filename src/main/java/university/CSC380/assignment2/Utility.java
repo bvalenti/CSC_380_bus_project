@@ -94,7 +94,9 @@ public final class Utility {
     // opens connection to Google Geocoding api
     public static HttpsURLConnection openGoogleApiConnection(String address) 
             throws MalformedURLException, IOException{
+        address = address.replace(" ", "%20");
         URL urlToGet = new URL("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=" + address);
+        System.out.println("URL = " + urlToGet.toString());
         return (HttpsURLConnection) urlToGet.openConnection();
     }
     

@@ -29,9 +29,9 @@ public class Main {
         
 //        Utility.startupTasks();
 
-        HttpsURLConnection conn = Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
-        System.out.println("Response code = " + conn.getResponseCode());
-        Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "GOOGLESTUFF.json", true);
+//        HttpsURLConnection conn = Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
+//        System.out.println("Response code = " + conn.getResponseCode());
+//        Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "GOOGLESTUFF.json", true);
 //        
 //        HashMap hm = Utility.parseSchedule("Routes.txt");
 //        
