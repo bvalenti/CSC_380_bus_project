@@ -182,12 +182,14 @@ public final class Utility {
         return fileName;
     }
 
+    // begins apiPoller task executed regularly to update vehicle-data
     public static void startupTasks() {
         apiPoller = new Timer();
         apiPollerTask = new UpdateModel();
         apiPoller.schedule(apiPollerTask, 0, 70000);
     }
 
+    // stops the apiPoller task that is regularly executed
     public static void stopApiPoller() {
         apiPollerTask.cancel();
         apiPoller.cancel();
