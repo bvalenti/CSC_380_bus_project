@@ -193,6 +193,30 @@ public final class Utility {
         apiPoller.cancel();
     }
 
+    public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException {
+        for (Bus b[] : busses.values()) {
+            for (Stop s : b[0].busRoute) {
+                String address = s.stopName.split("/")[0] + ", "
+                        + s.stopName.split("/")[1];
+                HttpsURLConnection conn
+                        = Utility.openGoogleApiConnection(address);
+                String fileName1 = Utility.getFile(conn,
+                        "/home/bill/Documents", "address-data.json", true);
+                // parse to json object and update busses
+            }
+            // repeat for opposite direction
+        }
+
+        return busses;
+    }
+
+    public static JsonObject createJsonObject(String fn) throws FileNotFoundException {
+        File f = new File(fn);
+        FileReader fr = new FileReader(f);
+        JsonReader reader = Json.createReader(fr);
+        return reader.readObject();
+    }
+    
     public static HashMap jsonParser(String fn) throws IOException, ParseException, org.json.simple.parser.ParseException {
         //String fn = Utility.getFile("http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "C:/Users/dt817/OneDrive/Documents" , "jsonFile.json");
         HashMap<String, Bus> busses = new HashMap();
@@ -243,27 +267,4 @@ public final class Utility {
 
     }
 
-    public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException {
-        for (Bus b[] : busses.values()) {
-            for (Stop s : b[0].busRoute) {
-                String address = s.stopName.split("/")[0] + ", "
-                        + s.stopName.split("/")[1];
-                HttpsURLConnection conn
-                        = Utility.openGoogleApiConnection(address);
-                String fileName1 = Utility.getFile(conn,
-                        "/home/bill/Documents", "address-data.json", true);
-                // parse to json object and update busses
-            }
-            // repeat for opposite direction
-        }
-
-        return busses;
-    }
-
-    public static JsonObject createJsonObject(String fn) throws FileNotFoundException {
-        File f = new File(fn);
-        FileReader fr = new FileReader(f);
-        JsonReader reader = Json.createReader(fr);
-        return reader.readObject();
-    }
 }

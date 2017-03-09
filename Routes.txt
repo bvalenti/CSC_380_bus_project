@@ -127,7 +127,7 @@ W 147 ST/ADAM C POWELL BL
 146 ST/LENOX AV
 RouteStops
 
-RouteSarts: M2 Washington Heights - East Village
+RouteStarts: M2 Washington Heights - East Village
 168 ST/AUDUBON AV
 BROADWAY/W 168 ST
 W 166 ST/ST NICHOLAS AV
