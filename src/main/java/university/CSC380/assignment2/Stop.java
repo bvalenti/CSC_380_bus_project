@@ -1,7 +1,11 @@
 package university.CSC380.assignment2;
 
 public class Stop {
-	public float longitude;
-	public float latitude;
+	public double longitude;
+	public double latitude;
 	public String stopName;
+        
+        public Stop(String sn){
+            stopName = sn;
+        }
 }

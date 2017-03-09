@@ -15,6 +15,8 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.json.*;
@@ -31,56 +33,106 @@ public final class Utility {
     private Utility() {
     }
 
-    // parses Schedule in txt file and returns hashmap of <id, Bus[2]>
-    // Bus[0] = Headed Downtown, Bus[1] = Headed Uptown
-//    public static HashMap parseSchedule(String fn) throws FileNotFoundException {
-//        File f = new File(fn);
-//        ArrayList<Stop> stops = new ArrayList();
-//        HashMap<String, Bus[]> busses = new HashMap();
-//        Bus b[] = new Bus[2];
-//        b[0] = new Bus();
-//        b[1] = new Bus();
-//        Scanner fs = new Scanner(f);
-//        String buffer;
-//        int direction = 0;
-//
-//        while (fs.hasNextLine()) {
-//            buffer = fs.nextLine();
-//            // if start of set of routes
-//            if (buffer.contains("RouteStart")) {
-//                stops = new ArrayList();
-//                b[0].id = buffer.split(": ")[1].split(" ")[0];
-//                b[0].origin = buffer.split(": ")[1].split(" -")[0];
-//                b[0].destinationName = buffer.split(": ")[1].split("- ")[1];
-//                b[1].id = buffer.split(": ")[1].split(" ")[0];
-//                b[1].origin = buffer.split(": ")[1].split("- ")[1];
-//                b[1].destinationName = buffer.split(": ")[1].split(" -")[0];
-//                direction = 0;
-//                // if reached end of first in pair of routes
-//            } else if (buffer.length() == 0
-//                    && b[1].busRoute == null) {
-//                Stop stopArray[] = new Stop[stops.size()];
-//                stops.toArray(stopArray);
-//                b[direction].busRoute = stopArray;
-//                direction = 1;
-//                stops = new ArrayList();
-//                // if reached end of set of routes
-//            } else if (buffer.contains("RouteStops")) {
-//                Stop stopArray[] = new Stop[stops.size()];
-//                stops.toArray(stopArray);
-//                b[direction].busRoute = stopArray;
-//                busses.put(b[0].id, b);
-//                b[0] = new Bus();
-//                b[1] = new Bus();
-//                // if line contains stop data
-//            } else {
-//                Stop s = new Stop(buffer);
-//                stops.add(s);
-//            }
-//        }
-//
-//        return busses;
-//    }
+    // parses Schedule in txt file and returns hashmap of <id, Bus>
+    public static HashMap parseSchedule(String fn, HashMap<String, Bus> hm) throws FileNotFoundException {
+        File f = new File(fn);
+        ArrayList<Stop> stops = new ArrayList();
+        Bus b[] = new Bus[2];
+        b[0] = new Bus();
+        b[1] = new Bus();
+        Scanner fs = new Scanner(f);
+        String buffer;
+        int direction = 0;
+        String[] keys = new String[2];
+        String id = null, origin1 = null, origin2 = null, 
+                destinationName1 = null, destinationName2 = null;
+
+        while (fs.hasNextLine()) {
+            buffer = fs.nextLine();
+            // if start of set of routes
+            if (buffer.contains("RouteStart")) {
+                id = buffer.split(": ")[1].split(" ")[0];
+                origin1 = buffer.split(": ")[1].split(" -")[0];
+                destinationName1 = buffer.split(": ")[1].split("- ")[1];
+                origin2 = buffer.split(": ")[1].split("- ")[1];
+                destinationName2 = buffer.split(": ")[1].split(" -")[0];
+                
+                //find first bus in hashmap with same route and direction
+                for (Bus bus : hm.values()){
+                    if (bus.busRoute == null && bus.id != null
+                            && bus.id.contains(id) && bus.direction == 1){
+                        b[0] = bus;
+                        for (String k : hm.keySet()){
+                            if (hm.get(k) == bus){
+                                keys[0] = k;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                //find second bus in hashmap with same route and direction
+                for (Bus bus : hm.values()){
+                    if (bus.busRoute == null && bus.id != null
+                            && bus.id.contains(id) && bus.direction == 0){
+                        b[1] = bus;
+                        for (String k : hm.keySet()){
+                            if (hm.get(k) == bus){
+                                keys[1] = k;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                stops = new ArrayList();
+                
+                direction = 0;
+                // if reached end of first in pair of routes
+            } else if (buffer.length() == 0
+                    && b[1].busRoute == null) {
+                Stop stopArray[] = new Stop[stops.size()];
+                stops.toArray(stopArray);
+                b[direction].busRoute = stopArray;
+                direction = 1;
+                stops = new ArrayList();
+                // if reached end of set of routes
+            } else if (buffer.contains("RouteStops")) {
+                Stop stopArray[] = new Stop[stops.size()];
+                stops.toArray(stopArray);
+                b[direction].busRoute = stopArray;
+                
+                //replace busses in hashmap
+                hm.put(keys[0], b[0]);
+                hm.put(keys[1], b[1]);
+                
+                //copy route to all other relevant busses
+                for (Bus bus : hm.values()){
+                    if (bus.busRoute == null && bus.id != null 
+                            && bus.id.contains(id) 
+                            && bus.direction == 1){
+                        bus.busRoute = b[0].busRoute;
+                    } else if (bus.busRoute == null && bus.id != null
+                            && bus.id.contains(id) 
+                            && bus.direction == 0) {
+                        bus.busRoute = b[1].busRoute;
+                    }
+                }
+                
+                b[0] = new Bus();
+                b[1] = new Bus();
+                // if line contains stop data
+            } else {
+                Stop s = new Stop(buffer);
+                stops.add(s);
+            }
+        }
+
+        return hm;
+    }
+    
     // opens connection to MTA api
     public static HttpURLConnection openMTAApiConnection() throws MalformedURLException, IOException {
         //URL urlToGet = new URL("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
@@ -139,7 +191,7 @@ public final class Utility {
         apiPoller.cancel();
     }
 
-    public void jsonParser(String fn) throws IOException, ParseException, org.json.simple.parser.ParseException {
+    public static HashMap jsonParser(String fn) throws IOException, ParseException, org.json.simple.parser.ParseException {
         //String fn = Utility.getFile("http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "C:/Users/dt817/OneDrive/Documents" , "jsonFile.json");
         HashMap<String, Bus> busses = new HashMap();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM uu  hh:mm");
@@ -184,6 +236,8 @@ public final class Utility {
 
             }
         }
+        
+        return busses;
 
     }
 

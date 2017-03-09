@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
 import java.util.HashMap;
 import javax.json.*;
 
@@ -19,19 +20,44 @@ import javax.json.*;
  *
  * @author bill
  */
-
 // Google Geocoding API key : AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw
-
 public class Main {
-    
-    public static void main(String[] args) throws FileNotFoundException, 
-            IOException{
-        
-//        Utility.startupTasks();
 
+    public static void main(String[] args) throws FileNotFoundException,
+            IOException,
+            ParseException,
+            org.json.simple.parser.ParseException {
+
+//        Utility.startupTasks();
 //        HttpsURLConnection conn = Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
 //        System.out.println("Response code = " + conn.getResponseCode());
 //        Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "GOOGLESTUFF.json", true);
+        //HttpURLConnection conn = Utility.openMTAApiConnection();
+        //System.out.println("Response code = " + conn.getResponseCode());
+        //Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json", false);
+        HashMap<String, Bus> busses = Utility.jsonParser("vehicle-monitoring.json");
+
+        for (Bus b : busses.values()) {
+            System.out.println("\nBus ID = " + b.id);
+            System.out.println("Bus Destination Name = " + b.destinationName);
+            System.out.println("Bus Direction = " + b.direction);
+        }
+
+        System.out.println("\n\nPARSING SCHEDULE\n\n");
+
+        busses = Utility.parseSchedule("Routes.txt", busses);
+
+        for (Bus b : busses.values()) {
+            System.out.println("\nBus ID = " + b.id);
+            System.out.println("Bus Destination Name = " + b.destinationName);
+            System.out.println("Bus Direction = " + b.direction);
+            if (b.busRoute != null) {
+                for (Stop s : b.busRoute) {
+                    System.out.println("Stop : " + s.stopName);
+                }
+            }
+        }
+
 //        
 //        HashMap hm = Utility.parseSchedule("Routes.txt");
 //        
@@ -42,7 +68,6 @@ public class Main {
 //        JsonObject j = Utility.parseJson(fileName1);
 //        
 //        System.out.println("Finished creating JObject");
-        
     }
-    
+
 }

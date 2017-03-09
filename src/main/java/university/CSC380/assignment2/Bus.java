@@ -9,6 +9,8 @@ public class Bus {
     public String expectedArrivalTime, expectedDepartureTime;
     public int direction;
     Stop busRoute[];
+    
+    public Bus(){};
 
     public Bus(float lo, float la, String i, String DN, String ex, String t, int d) {
         longitude = lo;
