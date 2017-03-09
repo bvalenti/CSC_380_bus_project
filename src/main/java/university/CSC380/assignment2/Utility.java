@@ -52,15 +52,16 @@ public final class Utility {
             // if start of set of routes
             if (buffer.contains("RouteStart")) {
                 id = buffer.split(": ")[1].split(" ")[0];
-                origin1 = buffer.split(": ")[1].split(" -")[0];
-                destinationName1 = buffer.split(": ")[1].split("- ")[1];
-                origin2 = buffer.split(": ")[1].split("- ")[1];
-                destinationName2 = buffer.split(": ")[1].split(" -")[0];
+//                origin1 = buffer.split(": ")[1].split(" -")[0];
+//                destinationName1 = buffer.split(": ")[1].split("- ")[1];
+//                origin2 = buffer.split(": ")[1].split("- ")[1];
+//                destinationName2 = buffer.split(": ")[1].split(" -")[0];
                 
                 //find first bus in hashmap with same route and direction
                 for (Bus bus : hm.values()){
                     if (bus.busRoute == null && bus.id != null
-                            && bus.id.contains(id) && bus.direction == 1){
+                            && bus.id.equals(id) 
+                            && bus.direction == 1){
                         b[0] = bus;
                         for (String k : hm.keySet()){
                             if (hm.get(k) == bus){
@@ -75,7 +76,8 @@ public final class Utility {
                 //find second bus in hashmap with same route and direction
                 for (Bus bus : hm.values()){
                     if (bus.busRoute == null && bus.id != null
-                            && bus.id.contains(id) && bus.direction == 0){
+                            && bus.id.equals(id) 
+                            && bus.direction == 0){
                         b[1] = bus;
                         for (String k : hm.keySet()){
                             if (hm.get(k) == bus){
@@ -111,11 +113,11 @@ public final class Utility {
                 //copy route to all other relevant busses
                 for (Bus bus : hm.values()){
                     if (bus.busRoute == null && bus.id != null 
-                            && bus.id.contains(id) 
+                            && bus.id.equals(id) 
                             && bus.direction == 1){
                         bus.busRoute = b[0].busRoute;
                     } else if (bus.busRoute == null && bus.id != null
-                            && bus.id.contains(id) 
+                            && bus.id.equals(id) 
                             && bus.direction == 0) {
                         bus.busRoute = b[1].busRoute;
                     }
