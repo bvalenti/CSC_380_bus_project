@@ -7,6 +7,7 @@ package university.CSC380.assignment2;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -32,6 +34,47 @@ import static org.mockito.Mockito.*;
  * @author bill
  */
 public class UtilityTest extends TestCase {
+    
+    //test assignTrips
+    public void testAssignTrips() throws FileNotFoundException, IOException, 
+            org.json.simple.parser.ParseException, ParseException {
+        HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
+        HashMap<String, Stop> stops = Utility.parseStops("stops.txt");
+        HashMap<String, Bus> busses = Utility.jsonParser("vehicle-monitoring.json");
+        busses = Utility.assignTrips(busses, trips, stops);
+        assertNotNull(busses.get("M103").busRoute);
+    }
+    
+    //test parseTrips
+    public void testParseTrips() {
+        try {
+            HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
+            assertNotNull(trips);
+        } catch (FileNotFoundException ex) {
+            assertTrue(false);
+        }
+    }
+    
+    //test parseStops
+    public void testParseStops(){
+        try {
+            HashMap<String, Stop> stops = Utility.parseStops("stops.txt");
+            assertNotNull(stops);
+        } catch (FileNotFoundException ex) {
+            assertTrue(false);
+        }
+    }
+    
+    //test parseStopTimes
+    public void testParseStopTimes() throws FileNotFoundException{
+        HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
+        try {
+            trips = Utility.parseStopTimes("stop_times.txt", trips);
+            assertNotNull(trips.values().iterator().next().route);
+        } catch (FileNotFoundException ex) {
+            assertTrue(false);
+        }
+    }
     
     //test openMTAApiConnection
     public void testOpenMTAApiConnection() throws InterruptedException, IOException{
