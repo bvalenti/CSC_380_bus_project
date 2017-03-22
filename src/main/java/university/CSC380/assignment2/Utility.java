@@ -32,107 +32,82 @@ public final class Utility {
 
     private Utility() {
     }
-
-    // parses Schedule in txt file and returns hashmap of <id, Bus>
-    public static HashMap parseSchedule(String fn, HashMap<String, Bus> hm) throws FileNotFoundException {
-        File f = new File(fn);
-        ArrayList<Stop> stops = new ArrayList();
-        Bus b[] = new Bus[2];
-        b[0] = new Bus();
-        b[1] = new Bus();
-        Scanner fs = new Scanner(f);
-        String buffer;
-        int direction = 0;
-        String[] keys = new String[2];
-        String id = null, origin1 = null, origin2 = null, 
-                destinationName1 = null, destinationName2 = null;
-
-        while (fs.hasNextLine()) {
-            buffer = fs.nextLine();
-            // if start of set of routes
-            if (buffer.contains("RouteStart")) {
-                id = buffer.split(": ")[1].split(" ")[0];
-//                origin1 = buffer.split(": ")[1].split(" -")[0];
-//                destinationName1 = buffer.split(": ")[1].split("- ")[1];
-//                origin2 = buffer.split(": ")[1].split("- ")[1];
-//                destinationName2 = buffer.split(": ")[1].split(" -")[0];
-                
-                //find first bus in hashmap with same route and direction
-                for (Bus bus : hm.values()){
-                    if (bus.busRoute == null && bus.id != null
-                            && bus.id.equals(id) 
-                            && bus.direction == 1){
-                        b[0] = bus;
-                        for (String k : hm.keySet()){
-                            if (hm.get(k) == bus){
-                                keys[0] = k;
-                                break;
-                            }
-                        }
-                        break;
+    
+    // associate correct trip with bus objects, return updated HashMap of Busses
+    public static HashMap assignTrips (HashMap<String, Bus> busses,
+            HashMap<String, Trip> trips, HashMap<String, Stop> stops){
+        for (Bus b : busses.values()){
+            for (Trip t : trips.values()){
+                if (t.route_id.equals(b.id)
+                        && t.direction_id == b.direction){
+                    Stop route[] = new Stop[t.route.size()];
+                    for (int i = 0; i < route.length; i++){
+                        route[i] = stops.get(t.route.get(i));
                     }
+                    b.busRoute = route;
                 }
-                
-                //find second bus in hashmap with same route and direction
-                for (Bus bus : hm.values()){
-                    if (bus.busRoute == null && bus.id != null
-                            && bus.id.equals(id) 
-                            && bus.direction == 0){
-                        b[1] = bus;
-                        for (String k : hm.keySet()){
-                            if (hm.get(k) == bus){
-                                keys[1] = k;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-                stops = new ArrayList();
-                
-                direction = 0;
-                // if reached end of first in pair of routes
-            } else if (buffer.length() == 0
-                    && b[1].busRoute == null) {
-                Stop stopArray[] = new Stop[stops.size()];
-                stops.toArray(stopArray);
-                b[direction].busRoute = stopArray;
-                direction = 1;
-                stops = new ArrayList();
-                // if reached end of set of routes
-            } else if (buffer.contains("RouteStops")) {
-                Stop stopArray[] = new Stop[stops.size()];
-                stops.toArray(stopArray);
-                b[direction].busRoute = stopArray;
-                
-                //replace busses in hashmap
-                hm.put(keys[0], b[0]);
-                hm.put(keys[1], b[1]);
-                
-                //copy route to all other relevant busses
-                for (Bus bus : hm.values()){
-                    if (bus.busRoute == null && bus.id != null 
-                            && bus.id.equals(id) 
-                            && bus.direction == 1){
-                        bus.busRoute = b[0].busRoute;
-                    } else if (bus.busRoute == null && bus.id != null
-                            && bus.id.equals(id) 
-                            && bus.direction == 0) {
-                        bus.busRoute = b[1].busRoute;
-                    }
-                }
-                
-                b[0] = new Bus();
-                b[1] = new Bus();
-                // if line contains stop data
-            } else {
-                Stop s = new Stop(buffer);
-                stops.add(s);
             }
         }
+        
+        return busses;
+    }
 
+    // parses trips in txt file and returns hashmap of <trip_id, Trip>
+    public static HashMap parseTrips (String fn) throws FileNotFoundException {
+        HashMap<String, Trip> hm = new HashMap();
+        Trip t = null;
+        File f = new File(fn);
+        Scanner fs = new Scanner(f);
+        String buffer = fs.nextLine();
+        
+        while (fs.hasNextLine()){
+            buffer = fs.nextLine();
+            String buffer_s[] = buffer.split(",");
+            t = new Trip(buffer_s[0], buffer_s[1], buffer_s[2], buffer_s[3],
+                Integer.parseInt(buffer_s[4]), buffer_s[5]);
+            hm.put(t.trip_id, t);
+        }
+        
         return hm;
+    }
+    
+    // parses Stops from txt file and returns HashMap<stop_id, Stop>
+    public static HashMap parseStops (String fn) throws FileNotFoundException {
+        HashMap<String, Stop> hm = new HashMap();
+        Stop s = null;
+        File f = new File(fn);
+        Scanner fs = new Scanner(f);
+        String buffer = fs.nextLine();
+        
+        while (fs.hasNextLine()){
+            buffer = fs.nextLine();
+            String buffer_s[] = buffer.split(",");
+            s = new Stop(buffer_s[0], buffer_s[1],
+                Double.parseDouble(buffer_s[3]),
+                Double.parseDouble(buffer_s[4]),
+                Integer.parseInt(buffer_s[7]));
+            hm.put(s.stop_id, s);
+        }
+        
+        return hm;
+    }
+    
+    // parses Stop Times from txt file and returns HashMap<trip_id, Trip>
+    public static HashMap parseStopTimes (String fn, 
+            HashMap<String, Trip> trips) throws FileNotFoundException{
+        File f = new File(fn);
+        Scanner fs = new Scanner(f);
+        String buffer = fs.nextLine();
+        
+        while (fs.hasNextLine()){
+            buffer = fs.nextLine();
+            String buffer_s[] = buffer.split(",");
+            String trip_id = buffer_s[0];
+            String stop_id = buffer_s[3];
+            trips.get(trip_id).route.add(stop_id);
+        }
+        
+        return trips;
     }
     
     // opens connection to MTA api
@@ -193,23 +168,6 @@ public final class Utility {
     public static void stopApiPoller() {
         apiPollerTask.cancel();
         apiPoller.cancel();
-    }
-
-    public static HashMap getCoordinatesForStops(HashMap<String, Bus[]> busses) throws IOException {
-        for (Bus b[] : busses.values()) {
-            for (Stop s : b[0].busRoute) {
-                String address = s.stopName.split("/")[0] + ", "
-                        + s.stopName.split("/")[1];
-                HttpsURLConnection conn
-                        = Utility.openGoogleApiConnection(address);
-                String fileName1 = Utility.getFile(conn,
-                        "/home/bill/Documents", "address-data.json", true);
-                // parse to json object and update busses
-            }
-            // repeat for opposite direction
-        }
-
-        return busses;
     }
 
     public static JsonObject createJsonObject(String fn) throws FileNotFoundException {

@@ -34,23 +34,13 @@ import static org.mockito.Mockito.*;
 public class UtilityTest extends TestCase {
     
     //test openMTAApiConnection
-    public void testOpenMTAApiConnection() throws InterruptedException{
+    public void testOpenMTAApiConnection() throws InterruptedException, IOException{
         System.out.println("Testing openMTAApiConnection");
-        try {
+        
             HttpURLConnection conn = Utility.openMTAApiConnection();
-            if (conn!= null){
-                System.out.println("Finished testing openMTAApiConnection"
-                        + " - Pass");
-            } else {
-                System.out.println("Finished testing openMTAApiConnection "
-                        + "- Fail");
-            }
-            assertTrue(conn != null);
-        } catch (IOException ex) {
-            System.out.println("Finished testing openMTAApiConnection "
-                        + "- Fail");
-            assertTrue(false);
-        }
+            
+            assertNotNull(conn);
+        
     }
     
     //test openGooleApiConnection

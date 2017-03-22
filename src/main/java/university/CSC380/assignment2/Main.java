@@ -36,27 +36,16 @@ public class Main {
         //System.out.println("Response code = " + conn.getResponseCode());
         //Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json", false);
         HashMap<String, Bus> busses = Utility.jsonParser("vehicle-monitoring.json");
+//
+//        for (Bus b : busses.values()) {
+//            System.out.println("\nBus ID = " + b.id);
+//            System.out.println("Bus Destination Name = " + b.destinationName);
+//            System.out.println("Bus Direction = " + b.direction);
+//        }
 
-        for (Bus b : busses.values()) {
-            System.out.println("\nBus ID = " + b.id);
-            System.out.println("Bus Destination Name = " + b.destinationName);
-            System.out.println("Bus Direction = " + b.direction);
-        }
-
-        System.out.println("\n\nPARSING SCHEDULE\n\n");
-
-        busses = Utility.parseSchedule("Routes.txt", busses);
-
-        for (Bus b : busses.values()) {
-            System.out.println("\nBus ID = " + b.id);
-            System.out.println("Bus Destination Name = " + b.destinationName);
-            System.out.println("Bus Direction = " + b.direction);
-            if (b.busRoute != null) {
-                for (Stop s : b.busRoute) {
-                    System.out.println("Stop : " + s.stopName);
-                }
-            }
-        }
+//        System.out.println("\n\nPARSING SCHEDULE\n\n");
+//
+//        busses = Utility.parseSchedule("Routes.txt", busses);
 
 //        
 //        HashMap hm = Utility.parseSchedule("Routes.txt");
@@ -68,6 +57,37 @@ public class Main {
 //        JsonObject j = Utility.parseJson(fileName1);
 //        
 //        System.out.println("Finished creating JObject");
+
+
+        HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
+        HashMap<String, Stop> stops = Utility.parseStops("stops.txt");
+        trips = Utility.parseStopTimes("stop_times.txt", trips);
+        busses = Utility.assignTrips(busses, trips, stops);
+        
+        for (Bus b : busses.values()) {
+            System.out.println("\nBus ID = " + b.id);
+            System.out.println("Bus Destination Name = " + b.destinationName);
+            System.out.println("Bus Direction = " + b.direction);
+            if (b.busRoute != null) {
+                for (Stop s : b.busRoute) {
+                    System.out.println("Stop : " + s.stop_name);
+                }
+            }
+        }
+        
+        
+//        for (Trip t : trips.values()){
+//            System.out.println(t.trip_id + ":");
+//            for (String s : t.route){
+//                System.out.println("    " + stops.get(s).stop_name);
+//            }
+//            System.out.println("");
+//        }
+
+//        for (Stop s : stops.values()) {
+//            System.out.println(s.stop_name + "\n");
+//        }
+
     }
 
 }
