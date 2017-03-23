@@ -57,9 +57,11 @@ public final class Utility {
         return shapes;
     }
 
-    // associate correct trip with bus objects, return updated HashMap of Busses
+    // associate correct trip information with bus objects, return updated 
+    // HashMap of Busses
     public static HashMap assignTrips(HashMap<String, Bus> busses,
-            HashMap<String, Trip> trips, HashMap<String, Stop> stops) {
+            HashMap<String, Trip> trips, HashMap<String, Stop> stops,
+            HashMap<String, Shape> shapes) {
         for (Bus b : busses.values()) {
             for (Trip t : trips.values()) {
                 if (!b.id.contains("SBS")) {
@@ -71,6 +73,7 @@ public final class Utility {
                             route[i] = stops.get(t.route.get(i));
                         }
                         b.busRoute = route;
+                        b.route_shape = shapes.get(t.shape_id);
                     }
                 } else {
                     // Select Bus Service
@@ -81,6 +84,7 @@ public final class Utility {
                             route[i] = stops.get(t.route.get(i));
                         }
                         b.busRoute = route;
+                        b.route_shape = shapes.get(t.shape_id);
                     }
                 }
             }

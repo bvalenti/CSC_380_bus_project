@@ -8,7 +8,8 @@ public class Bus {
     public String id, destinationName, origin;
     public String expectedArrivalTime, expectedDepartureTime;
     public int direction;
-    Stop busRoute[];
+    public Stop busRoute[];
+    public Shape route_shape;
     
     public Bus(){};
 
