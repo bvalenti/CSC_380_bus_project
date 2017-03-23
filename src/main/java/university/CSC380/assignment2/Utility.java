@@ -32,6 +32,30 @@ public final class Utility {
 
     private Utility() {
     }
+    
+    //parse shapes file into HashMap<shape_id, Shape>
+    public static HashMap parseShapes (String fn) throws FileNotFoundException {
+        HashMap<String, Shape> shapes = new HashMap();
+        Shape s = null;
+        File f = new File(fn);
+        Scanner fs = new Scanner(f);
+        String buffer = fs.nextLine();
+
+        while (fs.hasNextLine()) {
+            buffer = fs.nextLine();
+            String buffer_s[] = buffer.split(",");
+            if (s != null && !buffer_s[0].equals(s.shape_id))
+                shapes.put(s.shape_id, s);
+            if (s == null || !s.shape_id.equals(buffer_s[0]))
+                s = new Shape(buffer_s[0]);
+            Point p = new Point(buffer_s[0], Double.parseDouble(buffer_s[1]),
+                Double.parseDouble(buffer_s[2]), Integer.parseInt(buffer_s[3]));
+            s.points.add(p);
+            if (!fs.hasNextLine())
+                shapes.put(s.shape_id, s);
+        }
+        return shapes;
+    }
 
     // associate correct trip with bus objects, return updated HashMap of Busses
     public static HashMap assignTrips(HashMap<String, Bus> busses,
