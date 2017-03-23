@@ -61,8 +61,9 @@ public class Main {
 
         HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
         HashMap<String, Stop> stops = Utility.parseStops("stops.txt");
+        HashMap<String, Shape> shapes = Utility.parseShapes("shapes.txt");
         trips = Utility.parseStopTimes("stop_times.txt", trips);
-        busses = Utility.assignTrips(busses, trips, stops);
+        busses = Utility.assignTrips(busses, trips, stops, shapes);
         
         for (Bus b : busses.values()) {
             System.out.println("\nBus ID = " + b.id);
