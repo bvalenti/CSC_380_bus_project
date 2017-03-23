@@ -1,20 +1,29 @@
 package university.CSC380.assignment2;
 
-import java.time.LocalTime;
-import uk.me.jstott.jcoord.LatLng;
+import java.time.LocalDateTime;
 
 public class Bus {
-	public float longitude, latitude, longitudeOfLastPolling, latitudeOfLastPolling; 
-	public String id, routeNum, destinationName, origin;
-	public LocalTime expectedArrivalTime, timeOfLastPolling;
-	public Stop busRoute[];
-	
-	
-	
-	
-	
-	
-	public LocalTime getExpectedArrivalTime(Stop s) {
+
+    public float longitude, lattitude;
+    public String id, destinationName, origin;
+    public String expectedArrivalTime, expectedDepartureTime;
+    public int direction;
+    Stop busRoute[];
+    
+    public Bus(){};
+
+    public Bus(float lo, float la, String i, String DN, String ex, String t, int d) {
+        longitude = lo;
+        lattitude = la;
+        id = i;
+        destinationName = DN;
+        // origin= O;
+        expectedArrivalTime = ex;
+        expectedDepartureTime = t;
+        direction = d;
+    }
+
+    /*public LocalTime getExpectedArrivalTime(Stop s) {
 		LocalTime estimatedArrivalTime = null;
 		double distancesBetweenStops[] = new double[busRoute.length];
 		int stopIndex = -1;
@@ -83,5 +92,5 @@ public class Bus {
 			} 
 		}
 		return estimatedArrivalTime;
-	}
+	}*/
 }
