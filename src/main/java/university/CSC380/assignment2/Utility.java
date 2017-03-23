@@ -32,84 +32,97 @@ public final class Utility {
 
     private Utility() {
     }
-    
+
     // associate correct trip with bus objects, return updated HashMap of Busses
-    public static HashMap assignTrips (HashMap<String, Bus> busses,
-            HashMap<String, Trip> trips, HashMap<String, Stop> stops){
-        for (Bus b : busses.values()){
-            for (Trip t : trips.values()){
-                if (t.route_id.equals(b.id)
-                        && t.direction_id == b.direction){
-                    Stop route[] = new Stop[t.route.size()];
-                    for (int i = 0; i < route.length; i++){
-                        route[i] = stops.get(t.route.get(i));
+    public static HashMap assignTrips(HashMap<String, Bus> busses,
+            HashMap<String, Trip> trips, HashMap<String, Stop> stops) {
+        for (Bus b : busses.values()) {
+            for (Trip t : trips.values()) {
+                if (!b.id.contains("SBS")) {
+                    // Regular bus
+                    if (t.route_id.equals(b.id)
+                            && t.direction_id == b.direction) {
+                        Stop route[] = new Stop[t.route.size()];
+                        for (int i = 0; i < route.length; i++) {
+                            route[i] = stops.get(t.route.get(i));
+                        }
+                        b.busRoute = route;
                     }
-                    b.busRoute = route;
+                } else {
+                    // Select Bus Service
+                    if (t.trip_headsign.equals(b.destinationName)
+                            && t.direction_id == b.direction) {
+                        Stop route[] = new Stop[t.route.size()];
+                        for (int i = 0; i < route.length; i++) {
+                            route[i] = stops.get(t.route.get(i));
+                        }
+                        b.busRoute = route;
+                    }
                 }
             }
         }
-        
+
         return busses;
     }
 
     // parses trips in txt file and returns hashmap of <trip_id, Trip>
-    public static HashMap parseTrips (String fn) throws FileNotFoundException {
+    public static HashMap parseTrips(String fn) throws FileNotFoundException {
         HashMap<String, Trip> hm = new HashMap();
         Trip t = null;
         File f = new File(fn);
         Scanner fs = new Scanner(f);
         String buffer = fs.nextLine();
-        
-        while (fs.hasNextLine()){
+
+        while (fs.hasNextLine()) {
             buffer = fs.nextLine();
             String buffer_s[] = buffer.split(",");
             t = new Trip(buffer_s[0], buffer_s[1], buffer_s[2], buffer_s[3],
-                Integer.parseInt(buffer_s[4]), buffer_s[5]);
+                    Integer.parseInt(buffer_s[4]), buffer_s[5]);
             hm.put(t.trip_id, t);
         }
-        
+
         return hm;
     }
-    
+
     // parses Stops from txt file and returns HashMap<stop_id, Stop>
-    public static HashMap parseStops (String fn) throws FileNotFoundException {
+    public static HashMap parseStops(String fn) throws FileNotFoundException {
         HashMap<String, Stop> hm = new HashMap();
         Stop s = null;
         File f = new File(fn);
         Scanner fs = new Scanner(f);
         String buffer = fs.nextLine();
-        
-        while (fs.hasNextLine()){
+
+        while (fs.hasNextLine()) {
             buffer = fs.nextLine();
             String buffer_s[] = buffer.split(",");
             s = new Stop(buffer_s[0], buffer_s[1],
-                Double.parseDouble(buffer_s[3]),
-                Double.parseDouble(buffer_s[4]),
-                Integer.parseInt(buffer_s[7]));
+                    Double.parseDouble(buffer_s[3]),
+                    Double.parseDouble(buffer_s[4]),
+                    Integer.parseInt(buffer_s[7]));
             hm.put(s.stop_id, s);
         }
-        
+
         return hm;
     }
-    
+
     // parses Stop Times from txt file and returns HashMap<trip_id, Trip>
-    public static HashMap parseStopTimes (String fn, 
-            HashMap<String, Trip> trips) throws FileNotFoundException{
+    public static HashMap parseStopTimes(String fn,
+            HashMap<String, Trip> trips) throws FileNotFoundException {
         File f = new File(fn);
         Scanner fs = new Scanner(f);
         String buffer = fs.nextLine();
-        
-        while (fs.hasNextLine()){
+
+        while (fs.hasNextLine()) {
             buffer = fs.nextLine();
             String buffer_s[] = buffer.split(",");
             String trip_id = buffer_s[0];
             String stop_id = buffer_s[3];
             trips.get(trip_id).route.add(stop_id);
         }
-        
+
         return trips;
     }
-    
+
     // opens connection to MTA api
     public static HttpURLConnection openMTAApiConnection() throws MalformedURLException, IOException {
         //URL urlToGet = new URL("https://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880");
@@ -176,7 +189,7 @@ public final class Utility {
         JsonReader reader = Json.createReader(fr);
         return reader.readObject();
     }
-    
+
     public static HashMap jsonParser(String fn) throws IOException, ParseException, org.json.simple.parser.ParseException {
         //String fn = Utility.getFile("http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "C:/Users/dt817/OneDrive/Documents" , "jsonFile.json");
         HashMap<String, Bus> busses = new HashMap();
@@ -222,7 +235,7 @@ public final class Utility {
 
             }
         }
-        
+
         return busses;
 
     }
