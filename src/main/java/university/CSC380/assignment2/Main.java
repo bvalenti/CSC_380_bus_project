@@ -5,16 +5,21 @@
  */
 package university.CSC380.assignment2;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import javax.net.ssl.HttpsURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+//import java.net.HttpURLConnection;
+//import java.net.MalformedURLException;
+//import java.net.URISyntaxException;
+
+//import javax.net.ssl.HttpsURLConnection;
+
+//import java.net.URL;
+//import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.HashMap;
-import javax.json.*;
+
+//import javax.json.*;
 
 /**
  *
@@ -22,73 +27,46 @@ import javax.json.*;
  */
 // Google Geocoding API key : AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw
 public class Main {
-
+	
     public static void main(String[] args) throws FileNotFoundException,
             IOException,
             ParseException,
-            org.json.simple.parser.ParseException {
-
-//        Utility.startupTasks();
-//        HttpsURLConnection conn = Utility.openGoogleApiConnection("Malcom X Bl, 146 St");
-//        System.out.println("Response code = " + conn.getResponseCode());
-//        Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "GOOGLESTUFF.json", true);
-        //HttpURLConnection conn = Utility.openMTAApiConnection();
-        //System.out.println("Response code = " + conn.getResponseCode());
-        //Utility.getFile(conn, "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json", false);
-        HashMap<String, Bus> busses = Utility.jsonParser("vehicle-monitoring.json");
-//
-//        for (Bus b : busses.values()) {
-//            System.out.println("\nBus ID = " + b.id);
-//            System.out.println("Bus Destination Name = " + b.destinationName);
-//            System.out.println("Bus Direction = " + b.direction);
-//        }
-
-//        System.out.println("\n\nPARSING SCHEDULE\n\n");
-//
-//        busses = Utility.parseSchedule("Routes.txt", busses);
-
-//        
-//        HashMap hm = Utility.parseSchedule("Routes.txt");
-//        
-//        String fileName1 = Utility.getFile("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDVO746CwOhnxOo6KQOrEL1L6as-Ag_sKw&address=Malcom%20x%20bl,%20w%20146%20st", "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "address-data.json");
-//        
-//        String fileName2 = Utility.getFile("http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=7a22c3e8-61a7-40ff-9d54-714e36f56880", "/home/bill/SchoolWork/csc380/CSC_380_bus_project", "vehicle-monitoring.json");
-//        
-//        JsonObject j = Utility.parseJson(fileName1);
-//        
-//        System.out.println("Finished creating JObject");
-
-
-        HashMap<String, Trip> trips = Utility.parseTrips("trips.txt");
-        HashMap<String, Stop> stops = Utility.parseStops("stops.txt");
-        HashMap<String, Shape> shapes = Utility.parseShapes("shapes.txt");
-        trips = Utility.parseStopTimes("stop_times.txt", trips);
+            org.json.simple.parser.ParseException, Exception {
+    	
+    	File vehicle = new File(Main.class.getResource( "/vehicle-monitoring.json" ).toURI());
+    	HashMap<String, Bus> busses = Utility.jsonParser(vehicle.getAbsolutePath());
+    	
+    	File trips_txt = new File(Main.class.getResource( "/trips.txt" ).toURI());
+    	HashMap<String, Trip> trips = Utility.parseTrips(trips_txt.getAbsolutePath());
+    	
+    	File stops_txt = new File(Main.class.getResource( "/stops.txt" ).toURI());
+    	HashMap<String, Stop> stops = Utility.parseStops(stops_txt.getAbsolutePath());
+    	
+    	File shapes_txt = new File(Main.class.getResource( "/shapes.txt" ).toURI());
+    	HashMap<String, Shape> shapes = Utility.parseShapes(shapes_txt.getAbsolutePath());
+    	
+    	File stop_times_txt = new File(Main.class.getResource( "/stop_times.txt" ).toURI());
+    	trips = Utility.parseStopTimes(stop_times_txt.getAbsolutePath(), trips);
+    	
         busses = Utility.assignTrips(busses, trips, stops, shapes);
         
-        for (Bus b : busses.values()) {
-            System.out.println("\nBus ID = " + b.id);
-            System.out.println("Bus Destination Name = " + b.destinationName);
-            System.out.println("Bus Direction = " + b.direction);
-            if (b.busRoute != null) {
-                for (Stop s : b.busRoute) {
-                    System.out.println("Stop : " + s.stop_name);
-                }
-            }
-        }
+        HashMap<String, Bus> mymap = new HashMap();
+        Bus mybusarray[] = new Bus[busses.size()];
+        busses.values().toArray(mybusarray);
         
+        mymap.put("B1", mybusarray[10]);
+        mymap.put("B2", mybusarray[11]);
+        mymap.put("B3", mybusarray[12]);
+        mymap.put("B4", mybusarray[13]);
+        mymap.put("B5", mybusarray[14]);
+        mymap.put("B6", mybusarray[15]);
+        mymap.put("B7", mybusarray[16]);
         
-//        for (Trip t : trips.values()){
-//            System.out.println(t.trip_id + ":");
-//            for (String s : t.route){
-//                System.out.println("    " + stops.get(s).stop_name);
-//            }
-//            System.out.println("");
-//        }
+        MapObject map = MapInterface.makeMapInterface();
+        MapInterface.showSetOfBusLocations(mymap, map);
+//        MapInterface.showSetOfBusLocations(busses, map);
 
-//        for (Stop s : stops.values()) {
-//            System.out.println(s.stop_name + "\n");
-//        }
-
+        Bus a = mybusarray[1];
+//        MapInterface.plotBusRoute(a, map);
     }
-
 }
